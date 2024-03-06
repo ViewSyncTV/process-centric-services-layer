@@ -1,7 +1,6 @@
 const express = require("express")
 const spb = require("@supabase/supabase-js")
-const logger = require("./utils/logger")
-const tvProgramsRouter = require("./routes/tv-programs")
+const logger = require("./middleware/logger")
 
 const SUPABASE_URL = "https://ippynrgkwygyysedwjyy.supabase.com"
 const SUPABASE_KEY =
@@ -13,8 +12,9 @@ const port = 3000
 const createClient = spb.createClient
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
+app.use(logger)
 app.use("/api", require("./routes/router"))
-app.use((_req, res) => {
+app.use((req, res) => {
     res.status(404).json({
         error: {
             message: "Invalid Request",
@@ -22,6 +22,4 @@ app.use((_req, res) => {
     })
 })
 
-app.listen(port, () => {
-    logger.info(`Example app listening at http://localhost:${port}`)
-})
+app.listen(port, () => { })
