@@ -13,4 +13,3 @@ router.get("/movie/:name", asyncHandler(programMetadataController.getMovieDetail
 router.get("/tv-show/:name", asyncHandler(programMetadataController.getTvShowDetails))
 
 module.exports = router
-

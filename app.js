@@ -1,13 +1,28 @@
 const express = require("express")
 const logger = require("./src/middleware/logger")
 const { errorHandler } = require("./src/middleware/error-handler")
+const cors = require("cors")
+const session = require("express-session")
+
+const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24
+const SESSION_SECRET = process.env.SESSION_SECRET || ""
 
 const app = express()
 const port = process.env.PORT || 3000
 
+app.use(cors())
 app.use(logger)
 app.use(express.json({ limit: "50mb" }))
 app.use(express.urlencoded({ limit: "50mb", extended: true }))
+
+app.use(
+    session({
+        secret: SESSION_SECRET,
+        saveUninitialized: false,
+        resave: false,
+        cookie: { maxAge: DAY_IN_MILLISECONDS, },
+    }),
+)
 
 app.use("/api", require("./src/routes/router"))
 app.use((req, res) => {
@@ -19,4 +34,4 @@ app.use((req, res) => {
 })
 
 app.use(errorHandler)
-app.listen(port, () => { })
+app.listen(port, () => {})
