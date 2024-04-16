@@ -10,17 +10,33 @@ const SESSION_SECRET = process.env.SESSION_SECRET || ""
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(cors())
+var allowlist = ["http://localhost:3000", "http://localhost:3010"]
+var corsOptionsDelegate = {
+    credentials: true,
+    origin: function (origin, callback) {
+        if (allowlist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    },
+}
+
 app.use(logger)
 app.use(express.json({ limit: "50mb" }))
 app.use(express.urlencoded({ limit: "50mb", extended: true }))
+app.use(cors({credentials: true}))
 
 app.use(
     session({
         secret: SESSION_SECRET,
         saveUninitialized: false,
         resave: false,
-        cookie: { maxAge: DAY_IN_MILLISECONDS, },
+        cookie: {
+            maxAge: DAY_IN_MILLISECONDS,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+        },
     }),
 )
 

@@ -11,7 +11,7 @@ class AuthController {
         const code = req.query.code
 
         if (!code) {
-            res.status(401).send({ error: { message: "Missing authorization code." } })
+            res.status(401).send({ error: { message: "Missing authorization code" } })
         }
 
         const url = AUTH0_GET_TOKEN_URL.replace("{domain}", AUTH0_DOMAIN)
@@ -23,18 +23,14 @@ class AuthController {
         params.append("code", code)
         params.append("redirect_uri", "http://localhost:3000/")
 
-        req.log.info(params)
-
         req.log.info(`Calling Auth0 service: ${url}`)
         const response = await axios.post(url, params)
         req.log.info("Auth0 service response is OK")
 
         // save the token in the session
-        req.session.token = response.data.access_token
+        req.session.access_token = response.data.access_token
 
-        req.log.info("Token saved in session")
-
-        // TODO: redirect to the client app
+        res.send({})
     }
 }
 
