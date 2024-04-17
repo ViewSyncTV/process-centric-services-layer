@@ -1,8 +1,12 @@
-const { default: axios } = require("axios")
+const axios = require("axios")
 const jwt = require("jsonwebtoken")
 const jwkToPem = require("jwk-to-pem")
+const {
+    MissingAccessTokenError,
+    UnauthorizedError,
+    MissingPermissionError,
+} = require("../errors/auth_errors")
 const { asyncHandler } = require("./error-handler")
-const { MissingAccessTokenError, UnauthorizedError } = require("../errors/auth_errors")
 
 const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || ""
 const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE || ""
@@ -15,12 +19,18 @@ const jwtOptions = {
     issuer: AUTH0_ISSUER_BASE_URL,
 }
 
-const checkJwt = asyncHandler(async (req, res, next) => {
+function getAccessToken(req) {
     const access_token = req.session.access_token
 
     if (!access_token) {
         throw new MissingAccessTokenError()
     }
+
+    return access_token
+}
+
+const checkJwt = asyncHandler(async (req, res, next) => {
+    const access_token = getAccessToken(req)
 
     var jwks = await axios.get(`http://${AUTH0_DOMAIN}/.well-known/jwks.json`)
     const pem = jwkToPem(jwks.data.keys[0])
@@ -34,4 +44,18 @@ const checkJwt = asyncHandler(async (req, res, next) => {
     })
 })
 
-module.exports = [checkJwt]
+const checkPermission = (permission) =>
+    asyncHandler(async (req, res, next) => {
+        const access_token = getAccessToken(req)
+        const decoded = jwt.decode(access_token)
+
+        if (decoded?.permissions?.includes(permission)) {
+            next()
+        } else {
+            throw new MissingPermissionError(permission)
+        }
+    })
+
+const writeMessagesScope = "write:messages"
+
+module.exports = { checkJwt, checkPermission, writeMessagesScope }

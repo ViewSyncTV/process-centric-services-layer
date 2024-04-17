@@ -14,7 +14,16 @@ class UnauthorizedError extends Error {
     }
 }
 
+class MissingPermissionError extends Error {
+    constructor(permission) {
+        super(`Missing ${permission} permission`)
+        this.code = "MISSING_PERMISSION"
+        this.status = 403
+    }
+}
+
 module.exports = {
     MissingAccessTokenError,
-    UnauthorizedError
+    UnauthorizedError,
+    MissingPermissionError
 }
