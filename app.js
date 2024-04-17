@@ -3,12 +3,18 @@ const logger = require("./src/middleware/logger")
 const { errorHandler } = require("./src/middleware/error-handler")
 const cors = require("cors")
 const session = require("express-session")
+const SupabaseSessionStore = require("./src/helpers/supabase-session-store")
+const supabase = require("@supabase/supabase-js")
 
-const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24
 const SESSION_SECRET = process.env.SESSION_SECRET || ""
+const SUPABASE_URL = process.env.SUPABASE_URL || ""
+const SUPABASE_KEY = process.env.SUPABASE_KEY || ""
 
 const app = express()
 const port = process.env.PORT || 3000
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+const ONE_HOUR_IN_SECONDS = 60 * 60
 
 var allowlist = ["http://localhost:3000", "http://localhost:3010"]
 var corsOptionsDelegate = {
@@ -32,11 +38,7 @@ app.use(
         secret: SESSION_SECRET,
         saveUninitialized: false,
         resave: false,
-        cookie: {
-            maxAge: DAY_IN_MILLISECONDS,
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-        },
+        store: new SupabaseSessionStore(supabaseClient, ONE_HOUR_IN_SECONDS),
     }),
 )
 

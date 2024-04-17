@@ -1,5 +1,5 @@
 const express = require("express")
-const { checkJwt, checkPermission, writeMessagesScope, } = require("../middleware/api-protection")
+const { checkJwt, checkPermission, writeCommentsScope, } = require("../middleware/api-protection")
 const { asyncHandler } = require("../middleware/error-handler")
 
 const router = express.Router()
@@ -16,9 +16,9 @@ router.use("/auth", require("./auth-router"))
 router.use(
     "/test",
     checkJwt,
-    checkPermission(writeMessagesScope),
+    checkPermission(writeCommentsScope),
     asyncHandler(async (req, res) => {
-        res.send(req.session)
+        res.send({data: {message: "You are authenticated and authorized"}})
     }),
 )
 

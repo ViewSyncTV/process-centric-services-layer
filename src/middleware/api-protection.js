@@ -56,6 +56,6 @@ const checkPermission = (permission) =>
         }
     })
 
-const writeMessagesScope = "write:messages"
+const writeCommentsScope = "write:comments"
 
-module.exports = { checkJwt, checkPermission, writeMessagesScope }
+module.exports = { checkJwt, checkPermission, writeCommentsScope }
