@@ -5,10 +5,13 @@ const cors = require("cors")
 const session = require("express-session")
 const SupabaseSessionStore = require("./src/helpers/supabase-session-store")
 const supabase = require("@supabase/supabase-js")
+const { CORSRequestError } = require("./src/errors/common_errors")
 
 const SESSION_SECRET = process.env.SESSION_SECRET || ""
 const SUPABASE_URL = process.env.SUPABASE_URL || ""
 const SUPABASE_KEY = process.env.SUPABASE_KEY || ""
+
+const NODE_ENV = process.env.NODE_ENV || "development"
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -20,10 +23,14 @@ var allowlist = ["http://localhost:3000", "http://localhost:3010"]
 var corsOptionsDelegate = {
     credentials: true,
     origin: function (origin, callback) {
-        if (allowlist.indexOf(origin) !== -1) {
+        if (NODE_ENV === "development") {
             callback(null, true)
         } else {
-            callback(new Error("Not allowed by CORS"))
+            if (allowlist.indexOf(origin) !== -1) {
+                callback(null, true)
+            } else {
+                callback(new CORSRequestError("Not allowed by CORS"))
+            }
         }
     },
 }
