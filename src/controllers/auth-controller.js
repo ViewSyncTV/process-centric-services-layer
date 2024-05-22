@@ -5,14 +5,8 @@ const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID || ""
 const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET || ""
 
 const AUTH0_GET_TOKEN_URL = "https://{domain}/oauth/token"
-const AUTH0_GET_USER_INFO_URL = "https://{domain}/userinfo"
 
 class AuthController {
-    constructor() {
-        this.getToken = this.getToken.bind(this)
-    }
-
-
     async getToken(req, res) {
         const code = req.query.code
 
@@ -32,36 +26,11 @@ class AuthController {
         req.log.info(`Calling Auth0 service: ${url}`)
         const response = await axios.post(url, params)
         req.log.info("Auth0 service response is OK")
-
-        const access_token = response.data.access_token
-
         // save the token in the session
-        req.session.access_token = access_token
+        req.session.access_token = response.data.access_token
+        console.log("data: ", response.data)
 
-        // get user informations
-        const user = await this.#getUserInfo(access_token, req.log)
-
-        res.send({data: {user}})
-    }
-
-    /**
-     * @param {string} access_token
-     * @param {pino.Logger} logger
-     * @param {import("pino").Logger} logger
-     * @returns {Promise<any>} user informations
-     */
-    async #getUserInfo(access_token, logger) {
-        const url = AUTH0_GET_USER_INFO_URL.replace("{domain}", AUTH0_DOMAIN)
-        logger.info(`Calling Auth0 service: ${url}`)
-
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-                contentType: "application/json",
-            },
-        })
-
-        return response.data
+        res.send({ data: response.data })
     }
 }
 
