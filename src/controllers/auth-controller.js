@@ -20,7 +20,7 @@ class AuthController {
      * @async
      * @param {Types.Request} req - The request object
      * @param {Types.Response} res - The response object
-     * @returns {Promise<Types.ApiResponse<{string}>>} The access token
+     * @returns {Promise<Types.ApiResponse<{Types.UserInfo}>>} The user info
      * @throws Will throw an error if the request fails
      */
     async exchangeToken(req, res) {
@@ -43,10 +43,35 @@ class AuthController {
         const response = await axios.post(url, params)
         req.log.info("Auth0 service response is OK")
 
-        // save the token in the session
-        req.session.access_token = response.data.access_token
+        const access_token = response.data.access_token
 
-        res.send({ data: response.data })
+        // save the token in the session
+        req.session.access_token = access_token
+
+        // get user informations
+        const user = await this.#getUserInfo(access_token, req.log)
+
+        res.send({ data: { user } })
+    }
+
+    /**
+     * @param {string} access_token
+     * @param {pino.Logger} logger
+     * @param {import("pino").Logger} logger
+     * @returns {Promise<any>} user informations
+     */
+    async #getUserInfo(access_token, logger) {
+        const url = AUTH0_GET_USER_INFO_URL.replace("{domain}", AUTH0_DOMAIN)
+        logger.info(`Calling Auth0 service: ${url}`)
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+                contentType: "application/json",
+            },
+        })
+
+        return response.data
     }
 }
 
