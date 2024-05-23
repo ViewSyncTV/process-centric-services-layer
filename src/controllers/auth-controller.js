@@ -9,12 +9,17 @@ const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID || ""
 const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET || ""
 
 const AUTH0_GET_TOKEN_URL = "https://{domain}/oauth/token"
+const AUTH0_GET_USER_INFO_URL = "https://{domain}/userinfo"
 
 /**
  * Controller that handles the authentication
  * @memberof Controllers
  */
 class AuthController {
+    constructor() {
+        this.exchangeToken = this.exchangeToken.bind(this)
+    }
+
     /**
      * Given the authorization code, exchange with the provider the access token.
      * @async

@@ -55,7 +55,7 @@ router.get("/movie/:name", asyncHandler(programMetadataController.getMovieDetail
  * @memberof API.ProgramMetadata
  * @example
  * // Example of request
- * GET /api/program-metadata/movie/friends
+ * GET /api/program-metadata/tv-show/friends
  *
  * // Example of response
  * {
