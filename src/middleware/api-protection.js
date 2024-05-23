@@ -1,3 +1,5 @@
+/** @namespace authentication */
+
 const axios = require("axios")
 const jwt = require("jsonwebtoken")
 const jwkToPem = require("jwk-to-pem")
@@ -7,6 +9,8 @@ const {
     MissingPermissionError,
 } = require("../errors/auth_errors")
 const { asyncHandler } = require("./error-handler")
+// eslint-disable-next-line no-unused-vars
+const Types = require("../types/types")
 
 const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || ""
 const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE || ""
@@ -19,6 +23,14 @@ const jwtOptions = {
     issuer: AUTH0_ISSUER_BASE_URL,
 }
 
+/**
+ * Function that gets the access token from the session
+ * @function
+ * @param {Types.Request} req - The request object
+ * @returns {string} The access token
+ * @throws {MissingAccessTokenError} - If the access token is not found in the session
+ * @memberof authentication
+ */
 function getAccessToken(req) {
     const access_token = req.session.access_token
 
@@ -29,6 +41,15 @@ function getAccessToken(req) {
     return access_token
 }
 
+/**
+ * The middleware that checks the JWT token (access token) in the request
+ * @function
+ * @param {Types.Request} req - The request object
+ * @param {Types.Response} res - The response object
+ * @param {Function} next - The next middleware
+ * @throws {UnauthorizedError} - If the JWT token is invalid
+ * @memberof authentication
+ */
 const checkJwt = asyncHandler(async (req, res, next) => {
     const access_token = getAccessToken(req)
 
@@ -44,6 +65,14 @@ const checkJwt = asyncHandler(async (req, res, next) => {
     })
 })
 
+/**
+ * The middleware that checks the permission in the JWT token
+ * @function
+ * @param {string} permission - The permission to check
+ * @returns {Function} The middleware function
+ * @throws {MissingPermissionError} - If the permission is not found in the JWT token
+ * @memberof authentication
+ */
 const checkPermission = (permission) =>
     asyncHandler(async (req, res, next) => {
         const access_token = getAccessToken(req)

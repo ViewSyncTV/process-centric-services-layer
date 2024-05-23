@@ -1,3 +1,9 @@
+/**
+ * @namespace API
+ * @category API
+ * @requires express
+ */
+
 const express = require("express")
 const { checkJwt, checkPermission, writeCommentsScope, } = require("../middleware/api-protection")
 const { asyncHandler } = require("../middleware/error-handler")
