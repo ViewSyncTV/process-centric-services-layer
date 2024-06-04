@@ -28,7 +28,7 @@ router.get("/", (req, res) => {
 /**
  * Search for movies given a query. <br>
  * This route will return only the best match for the query.
- * @name MovieSearch
+ * @name MovieDetails
  * @route {GET} /api/program-metadata/movie/:name
  * @routeparam {string} :name - The query to search for
  * @memberof API.ProgramMetadata

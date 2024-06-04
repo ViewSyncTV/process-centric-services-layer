@@ -65,7 +65,6 @@ class AuthController {
     /**
      * @param {string} access_token
      * @param {pino.Logger} logger
-     * @param {import("pino").Logger} logger
      * @returns {Promise<Types.UserInfo>} user informations
      */
     async #getUserInfo(access_token, logger) {
