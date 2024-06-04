@@ -11,6 +11,7 @@ const TvProgramController = require("../controllers/tv-program-controller")
 const { asyncHandler } = require("../middleware/error-handler")
 // eslint-disable-next-line no-unused-vars
 const API = require("./router")
+const { checkJwt } = require("../middleware/api-protection")
 
 const router = express.Router()
 const tvProgramController = new TvProgramController()
@@ -64,5 +65,52 @@ router.get("/today", asyncHandler(tvProgramController.getTodayPrograms))
  * }
  */
 router.get("/week", asyncHandler(tvProgramController.getWeekPrograms))
+
+/**
+ * Add a Tv program to the favorite list of the user.
+ * @name FavoriteAdd
+ * @route {POST} /api/tv-program/favorite
+ * @memberof API.TvProgram
+ * @example
+ * // Example of request
+ * POST /api/tv-program/favorite
+ * {
+ *     "movie_id": "12345"  // or tvshow_id
+ * }
+ */
+router.post("/favorite", checkJwt, asyncHandler(tvProgramController.addFavorite))
+
+/**
+ * Remove a Tv program from the favorite list of the user.
+ * @name FavoriteRemove
+ * @route {DELETE} /api/tv-program/favorite
+ * @memberof API.TvProgram
+ * @example
+ * // Example of request
+ * DELETE /api/tv-program/favorite
+ * {
+ *    "tvshow_id": "12345"  // or movie_id
+ * }
+ */
+router.delete("/favorite", checkJwt, asyncHandler(tvProgramController.removeFavorite))
+
+/**
+ * Get the list of favorite Tv programs of the user.
+ * @name FavoriteGet
+ * @route {GET} /api/tv-program/favorites
+ * @memberof API.TvProgram
+ * @example
+ * // Example of request
+ * GET /api/tv-program/favorites
+ *
+ * // Example of response
+ * {
+ *     "data": [
+ *          {"movie_id": 8384}
+ *          {"tvshow_id": 88829},
+ *     ]
+ * }
+ */
+router.get("/favorites", checkJwt, asyncHandler(tvProgramController.getFavorites))
 
 module.exports = router

@@ -10,12 +10,20 @@ const { Response, Request } = require("express")
  * @typedef {Request} Request
  * @property {T} [body] - The body object
  * @property {Logger} log - The logger object
+ * @property {Session} session - The session object
  * @memberof Types
  */
 
 /**
  * @template T
  * @typedef {Response} Response
+ * @memberof Types
+ */
+
+/**
+ * @typedef {object} Session - The session object
+ * @property {UserInfo} user - The user object
+ * @property {string} access_token - The access token
  * @memberof Types
  */
 
@@ -112,6 +120,13 @@ const { Response, Request } = require("express")
  * @property {string} email - The email of the user
  * @property {boolean} email_verified - Whether the email is verified
  * @property {string} sub - The subject of the user
+ * @memberof Types
+ */
+
+/**
+ * @typedef {object} Favorite - The favorite object
+ * @property {?string} movie_id - The id of the movie
+ * @property {?string} tvshow_id - The id of the tv show
  * @memberof Types
  */
 

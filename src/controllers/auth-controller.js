@@ -56,6 +56,9 @@ class AuthController {
         // get user informations
         const user = await this.#getUserInfo(access_token, req.log)
 
+        // save the user informations in the session
+        req.session.user = user
+
         res.send({ data: { user } })
     }
 
@@ -63,7 +66,7 @@ class AuthController {
      * @param {string} access_token
      * @param {pino.Logger} logger
      * @param {import("pino").Logger} logger
-     * @returns {Promise<any>} user informations
+     * @returns {Promise<Types.UserInfo>} user informations
      */
     async #getUserInfo(access_token, logger) {
         const url = AUTH0_GET_USER_INFO_URL.replace("{domain}", AUTH0_DOMAIN)

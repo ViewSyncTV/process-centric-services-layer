@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
  * Search for movies given a query. <br>
  * This route will return only the best match for the query.
  * @name MovieSearch
- * @route {GET} /api/program-metadata/movie/:id
+ * @route {GET} /api/program-metadata/movie/:name
  * @routeparam {string} :name - The query to search for
  * @memberof API.ProgramMetadata
  * @example
@@ -50,7 +50,7 @@ router.get("/movie/:name", asyncHandler(programMetadataController.getMovieDetail
  * Search for tv-show given a query. <br>
  * This route will return only the best match for the query.
  * @name TvShowDetails
- * @route {GET} /api/program-metadata/tv-show/:id
+ * @route {GET} /api/program-metadata/tv-show/:name
  * @routeparam {string} :name - The query to search for
  * @memberof API.ProgramMetadata
  * @example
