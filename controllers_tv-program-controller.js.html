@@ -216,8 +216,7 @@ class TvProgramController {
 
         const body = req.body
         body.user_email = req.session.user.email
-
-        const response = await axios.delete(url, body)
+        const response = await axios.delete(url, {data: body})
 
         req.log.info("Business service response is OK")
         res.send({ data: response.data.data })
