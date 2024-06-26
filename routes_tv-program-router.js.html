@@ -175,7 +175,8 @@ router.get("/week", asyncHandler(tvProgramController.getWeekPrograms))
  * // Example of request
  * POST /api/tv-program/favorite
  * {
- *     "movie_id": "12345"  // or tvshow_id
+ *     "movie_id": "12345",  // or tvshow_id
+ *     "title": "Title"
  * }
  */
 router.post("/favorite", checkJwt, asyncHandler(tvProgramController.addFavorite))
@@ -206,8 +207,8 @@ router.delete("/favorite", checkJwt, asyncHandler(tvProgramController.removeFavo
  * // Example of response
  * {
  *     "data": [
- *          {"movie_id": 8384}
- *          {"tvshow_id": 88829},
+ *          {"movie_id": 8384, "title": "title1"}
+ *          {"tvshow_id": 88829, "title": "title2"},
  *     ]
  * }
  */
