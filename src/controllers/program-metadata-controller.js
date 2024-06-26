@@ -9,6 +9,9 @@ const BUSINESS_PROCESS_SERVICE_URL =
 
 const PROGRAM_METADATA_GET_MOVIE_DETAILS = `${BUSINESS_PROCESS_SERVICE_URL}/api/program-metadata/movie/{name}`
 
+const PROGRAM_METADATA_GET_TV_SHOW_RECOMMENDATIONS = `${BUSINESS_PROCESS_SERVICE_URL}/api/program-metadata/tv-show/recommendations/{id}`
+const PROGRAM_METADATA_GET_MOVIE_RECOMMENDATIONS = `${BUSINESS_PROCESS_SERVICE_URL}/api/program-metadata/movie/recommendations/{id}`
+
 /**
  * Controller that handles the fetch of the program metadata
  * @memberof Controllers
@@ -46,6 +49,46 @@ class ProgramMetadataController {
      */
     async getTvShowDetails(req, res) {
         const url = `${BUSINESS_PROCESS_SERVICE_URL}/api/program-metadata/tv-show/${req.params.name}`
+        req.log.info(`Calling business process service: ${url}`)
+
+        const response = await axios.get(url)
+
+        req.log.info("Business service response is OK")
+        res.send({ data: response.data.data })
+    }
+
+    /**
+     * Get the recommendations for a tv-show by its id.
+     * @async
+     * @param {Types.Request} req - The request object
+     * @param {Types.Response} res - The response object
+     * @returns {Promise<Types.ApiResponse<Types.TVShow[]>>} The recommendations for the tv-show
+     * @throws Will throw an error if the request fails
+     */
+    async getTvShowRecommendations(req, res) {
+        const id = req.params.id
+
+        const url = PROGRAM_METADATA_GET_TV_SHOW_RECOMMENDATIONS.replace("{id}", id)
+        req.log.info(`Calling business process service: ${url}`)
+
+        const response = await axios.get(url)
+
+        req.log.info("Business service response is OK")
+        res.send({ data: response.data.data })
+    }
+
+    /**
+     * Get the recommendations for a movie by its id.
+     * @async
+     * @param {Types.Request} req - The request object
+     * @param {Types.Response} res - The response object
+     * @returns {Promise<Types.ApiResponse<Types.Movie[]>>} The recommendations for the movie
+     * @throws Will throw an error if the request fails
+     */
+    async getMovieRecommendations(req, res) {
+        const id = req.params.id
+
+        const url = PROGRAM_METADATA_GET_MOVIE_RECOMMENDATIONS.replace("{id}", id)
         req.log.info(`Calling business process service: ${url}`)
 
         const response = await axios.get(url)

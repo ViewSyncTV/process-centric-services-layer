@@ -67,4 +67,48 @@ router.get("/movie/:name", asyncHandler(programMetadataController.getMovieDetail
  */
 router.get("/tv-show/:name", asyncHandler(programMetadataController.getTvShowDetails))
 
+/**
+ * Get the recommendations for a tv-show by its id.
+ * @name TvShowRecommendations
+ * @route {GET} /api/program-metadata/tv-show/recommendations/:id
+ * @routeparam {string} :id - The id of the tv-show
+ * @memberof API.ProgramMetadata
+ * @example
+ * // Example of request
+ * GET /api/program-metadata/tv-show/recommendations/1668
+ *
+ * // Example of response
+ * {
+ *   "data": {
+ *      "id":123,"title":"Starting Over","original_title":"Starting Over","description":"","poster_path":"https://image.tmdb.org/t/p/original/dfoTgMdVKF08Sqp4AeLlMcLaVV7.jpg","original_language":"en","first_air_date":"2003-09-09","last_air_date":"2004-11-05","number_of_episodes":235,"number_of_seasons":2,"genres":[],"in_production":false,"languages":[],"origin_country":["US"],"vote_average":8.5,"seasons":[{"id":358,"name":"Stagione 1","overview":"","season_number":1,"episode_count":195,"air_date":"2003-09-08","poster_path":""},{"id":359,"name":"Stagione 2","overview":"","season_number":2,"episode_count":40,"air_date":"2004-09-13","poster_path":""
+ *   }
+ * }
+ */
+router.get(
+    "/tv-show/recommendations/:id",
+    asyncHandler(programMetadataController.getTvShowRecommendations),
+)
+
+/**
+ * Get the recommendations for a movie by its id.
+ * @name MovieRecommendations
+ * @route {GET} /api/program-metadata/movie/recommendations/:id
+ * @routeparam {string} :id - The id of the movie
+ * @memberof API.ProgramMetadata
+ * @example
+ * // Example of request
+ * GET /api/program-metadata/movie/recommendations/475557
+ *
+ * // Example of response
+ * {
+ *   "data": {
+ *      "id":123,"title":"Starting Over","original_title":"Starting Over","description":"","poster_path":"https://image.tmdb.org/t/p/original/dfoTgMdVKF08Sqp4AeLlMcLaVV7.jpg","original_language":"en","first_air_date":"2003-09-09","last_air_date":"2004-11-05","number_of_episodes":235,"number_of_seasons":2,"genres":[],"in_production":false,"languages":[],"origin_country":["US"],"vote_average":8.5,"seasons":[{"id":358,"name":"Stagione 1","overview":"","season_number":1,"episode_count":195,"air_date":"2003-09-08","poster_path":""},{"id":359,"name":"Stagione 2","overview":"","season_number":2,"episode_count":40,"air_date":"2004-09-13","poster_path":""
+ *   }
+ * }
+ */
+router.get(
+    "/movie/recommendations/:id",
+    asyncHandler(programMetadataController.getMovieRecommendations),
+)
+
 module.exports = router
