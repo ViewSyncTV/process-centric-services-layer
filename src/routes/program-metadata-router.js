@@ -12,6 +12,7 @@ const { asyncHandler } = require("../middleware/error-handler")
 // eslint-disable-next-line no-unused-vars
 const API = require("./router")
 
+const { checkJwt, checkPermission, writeCommentsScope } = require("../middleware/api-protection")
 const router = express.Router()
 const programMetadataController = new ProgramMetadataController()
 
@@ -86,6 +87,7 @@ router.get("/tv-show/:name", asyncHandler(programMetadataController.getTvShowDet
  */
 router.get(
     "/tv-show/recommendations/:id",
+    checkJwt,
     asyncHandler(programMetadataController.getTvShowRecommendations),
 )
 
@@ -108,6 +110,7 @@ router.get(
  */
 router.get(
     "/movie/recommendations/:id",
+    checkJwt,
     asyncHandler(programMetadataController.getMovieRecommendations),
 )
 
